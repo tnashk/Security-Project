@@ -38,7 +38,6 @@ void setup() {
 
   //Setup serial keys
   //serial read doesnt take integers, how much does it read then?
-  bool sloop = true;
   while(Serial.available() <= 0) ;
   char buff[64];
   Serial.readBytes(buff, sizeof(buff));
