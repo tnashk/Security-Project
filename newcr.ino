@@ -2,19 +2,20 @@
 // uid can be read and sent (serial print)
 
 
-// current issues:
-// contents cannot be read (every block returns 5)
-// or writen (for increment)
-// rsa dont work
+//credit:
+// functions from the rfid library were edited and added into this scripts
+// mfrc522 library was also used
 
 
 #include <SPI.h>
 #include <MFRC522.h>
-#include <rsa.h>
 
 #define SS_PIN 10
 #define RST_PIN 9
 #define BUZZER_PIN 8
+#define R_LED_PIN 12
+#define G_LED_PIN 11
+
 const unsigned int UID_SIZE = 4;
 MFRC522 mfrc522(SS_PIN, RST_PIN );
 
@@ -32,6 +33,8 @@ void setup() {
   Serial.begin(230400);
   //mfrc522.PCD_Init(); //Init RFID reader
   pinMode(BUZZER_PIN, OUTPUT);
+  pinMode(R_LED_PIN, OUTPUT);
+  pinMode(G_LED_PIN, OUTPUT);
 
   //Setup serial keys
   //serial read doesnt take integers, how much does it read then?
@@ -76,14 +79,24 @@ void loop() {
   
   mfrc522.PICC_HaltA();
 
-  // ISSUE: always returns 5
-  //byte readbyte = mfrc522.MIFARE_Read(1, &buffRead, 128);
   Serial.println(uid);
   tone(BUZZER_PIN, 1000);
   delay(100);
   tone(BUZZER_PIN, 1500);
   delay(200);
   noTone(BUZZER_PIN);
+
+/*
+// if authorization checks out
+  digitalWrite(G_LED_PIN, HIGH);
+  delay(300);
+  digitalWrite(G_LED_PIN, LOW);
+
+//if authorization does not check out
+  digitalWrite(R_LED_PIN, HIGH);
+  delay(300);
+  digitalWrite(R_LED_PIN, LOW);
+*/
 
   char buff[64];
   snprintf(buff, 64, "%lu", pyn);
